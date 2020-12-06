@@ -11,12 +11,13 @@ class Square extends React.Component {
     if (this.props.isCandidate) {
       className += ' candidate';
     }
+    const koma = new Koma(this.props.type);
     return (
       <button
         className={className}
         onClick={() => this.props.onClick()}
       >
-        {this.props.type}
+        {koma.name}
       </button>
     );
   }
@@ -27,51 +28,51 @@ class Board extends React.Component {
     super(props);
     const squares = [
       {
-        type: '0,0',
+        type: null,
         position: [0, 0],
       },
       {
-        type: '1,0',
+        type: null,
         position: [1, 0],
       },
       {
-        type: '2,0',
+        type: null,
         position: [2, 0],
       },
       {
-        type: '0,1',
+        type: null,
         position: [0, 1],
       },
       {
-        type: '1,1',
+        type: null,
         position: [1, 1],
       },
       {
-        type: '2,1',
+        type: null,
         position: [2, 1],
       },
       {
-        type: '0,2',
+        type: null,
         position: [0, 2],
       },
       {
-        type: '1,2',
+        type: 'hiyoko',
         position: [1, 2],
       },
       {
-        type: '2,2',
+        type: null,
         position: [2, 2],
       },
       {
-        type: '0,3',
+        type: 'zou',
         position: [0, 3],
       },
       {
-        type: 'ひよこ',
+        type: 'lion',
         position: [1, 3],
       },
       {
-        type: '2,3',
+        type: 'kirin',
         position: [2, 3],
       },
     ]
@@ -108,7 +109,7 @@ class Board extends React.Component {
     } else if (this.isSquareIncludedInMovingCandidates(i)) {
         const squares = this.state.squares.slice();
         squares[i].type = this.state.squares[this.state.selectedSquareIndex].type;
-        squares[this.state.selectedSquareIndex].type = this.state.squares[this.state.selectedSquareIndex].position.join(',');
+        squares[this.state.selectedSquareIndex].type = null;
         this.setState({
           squares: squares,
           selectedSquareIndex: null,
@@ -117,7 +118,7 @@ class Board extends React.Component {
     } else {
       this.setState({selectedSquareIndex: i});
       const position = this.state.squares[i].position
-      const diffs = movingDiffs();
+      const diffs = new Koma(this.state.squares[i].type).moveTo;
       const candidates = diffs.map(diff => [diff[0] + position[0], diff[1] + position[1]]);
       const filteredCandidates = candidates.filter(c => c[0] >= 0 && c[0] < 3 && c[1] >= 0 && c[1] < 4);
       this.setState({movingCandidates: filteredCandidates});
@@ -171,8 +172,31 @@ class App extends React.Component {
   }
 }
 
-function movingDiffs() {
-  return [[0, -1]];
+class Koma {
+  constructor(type) {
+    const animals = {
+      'hiyoko': {
+        name: 'ひよこ',
+        moveTo: [[0, -1]],
+      },
+      'zou': {
+        name: 'ぞう',
+        moveTo: [[-1, -1], [1, -1], [-1, 1], [1, 1]],
+      },
+      'lion': {
+        name: 'らいおん',
+        moveTo: [[-1, -1], [1, -1], [-1, 1], [1, 1], [0, -1], [-1, 0], [0, 1], [1, 0]],
+      },
+      'kirin': {
+        name: 'きりん',
+        moveTo: [[0, -1], [-1, 0], [0, 1], [1, 0]],
+      },
+    }
+
+    this.type = type;
+    this.name = !!type ? animals[type].name : '';
+    this.moveTo = !!type ? animals[type].moveTo: [];
+  }
 }
 
 export default App;
