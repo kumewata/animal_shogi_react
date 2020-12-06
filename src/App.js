@@ -67,7 +67,7 @@ class Board extends React.Component {
         position: [0, 3],
       },
       {
-        type: '1,3',
+        type: 'ひよこ',
         position: [1, 3],
       },
       {
@@ -95,11 +95,23 @@ class Board extends React.Component {
   }
 
   handleClick(i) {
+    const position = this.state.squares[i].position;
+    const samePosition = (element) => element[0] === position[0] && element[1] === position[1];
+
     if (this.state.selectedSquareIndex === i) {
       this.setState({
         selectedSquareIndex: null,
         movingCandidates: []
       });
+    } else if (this.state.movingCandidates.some(samePosition)) {
+        const squares = this.state.squares.slice();
+        squares[i].type = this.state.squares[this.state.selectedSquareIndex].type;
+        squares[this.state.selectedSquareIndex].type = this.state.squares[this.state.selectedSquareIndex].position.join(',');
+        this.setState({
+          squares: squares,
+          selectedSquareIndex: null,
+          movingCandidates: [],
+        });
     } else {
       this.setState({selectedSquareIndex: i});
       const position = this.state.squares[i].position
