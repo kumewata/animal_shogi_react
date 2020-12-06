@@ -82,28 +82,30 @@ class Board extends React.Component {
     }
   }
 
-  renderSquare(i) {
+  isSquareIncludedInMovingCandidates(i) {
     const position = this.state.squares[i].position;
-    const samePosition = (element) => element[0] === position[0] && element[1] === position[1];
+    const isSamePosition = (element) => element[0] === position[0] && element[1] === position[1];
+
+    return this.state.movingCandidates.some(isSamePosition);
+  }
+
+  renderSquare(i) {
     return (
       <Square
         type={this.state.squares[i].type}
         onClick={() => this.handleClick(i)}
         isSelected={this.state.selectedSquareIndex === i}
-        isCandidate={this.state.movingCandidates.some(samePosition)}
+        isCandidate={this.isSquareIncludedInMovingCandidates(i)}
       />);
   }
 
   handleClick(i) {
-    const position = this.state.squares[i].position;
-    const samePosition = (element) => element[0] === position[0] && element[1] === position[1];
-
     if (this.state.selectedSquareIndex === i) {
       this.setState({
         selectedSquareIndex: null,
         movingCandidates: []
       });
-    } else if (this.state.movingCandidates.some(samePosition)) {
+    } else if (this.isSquareIncludedInMovingCandidates(i)) {
         const squares = this.state.squares.slice();
         squares[i].type = this.state.squares[this.state.selectedSquareIndex].type;
         squares[this.state.selectedSquareIndex].type = this.state.squares[this.state.selectedSquareIndex].position.join(',');
