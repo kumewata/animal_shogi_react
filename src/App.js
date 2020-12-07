@@ -98,9 +98,15 @@ class Board extends React.Component {
     const diffs = new Koma(squares[targetIndex].type).moveTo;
     const movingCandidates = this.mapMergeDiffs(squares[targetIndex].position, diffs);
     const filledPositions = squares.filter(s => s.type !== null);
+    const isInsideBoard = (c) => {
+      return c => c[0] >= 0 && c[0] < 3 && c[1] >= 0 && c[1] < 4;
+    }
+    const isPositionFilled = (c) => {
+      return !(filledPositions.map(s => s.position.toString()).includes(c.toString()));
+    }
     
-    return movingCandidates.filter(c => c[0] >= 0 && c[0] < 3 && c[1] >= 0 && c[1] < 4)
-                           .filter(c => !(filledPositions.map(s => s.position.toString()).includes(c.toString())));
+    return movingCandidates.filter(isInsideBoard)
+                           .filter(isPositionFilled);
   }
 
   renderSquare(i) {
