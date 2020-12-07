@@ -94,6 +94,15 @@ class Board extends React.Component {
     return diffs.map(diff => [diff[0] + target[0], diff[1] + target[1]]);
   }
 
+  filterdMovingCandidates(targetIndex, squares) {
+    const diffs = new Koma(squares[targetIndex].type).moveTo;
+    const movingCandidates = this.mapMergeDiffs(squares[targetIndex].position, diffs);
+    const filledPositions = squares.filter(s => s.type !== null);
+    
+    return movingCandidates.filter(c => c[0] >= 0 && c[0] < 3 && c[1] >= 0 && c[1] < 4)
+                           .filter(c => !(filledPositions.map(s => s.position.toString()).includes(c.toString())));
+  }
+
   renderSquare(i) {
     return (
       <Square
@@ -120,16 +129,12 @@ class Board extends React.Component {
           movingCandidates: [],
         });
     } else {
-      this.setState({selectedSquareIndex: i});
       const squares = this.state.squares.slice();
       
-      const diffs = new Koma(this.state.squares[i].type).moveTo;
-      const movingCandidates = this.mapMergeDiffs(squares[i].position, diffs);
-      const filledPositions = squares.filter(s => s.type !== null);
-      const filteredCandidates = movingCandidates.filter(c => c[0] >= 0 && c[0] < 3 && c[1] >= 0 && c[1] < 4)
-                                                 .filter(c => !(filledPositions.map(s => s.position.toString()).includes(c.toString())));
-
-      this.setState({movingCandidates: filteredCandidates});
+      this.setState({
+        selectedSquareIndex: i,
+        movingCandidates: this.filterdMovingCandidates(i, squares),
+      });
     }
   }
 
