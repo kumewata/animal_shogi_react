@@ -29,50 +29,62 @@ class Board extends React.Component {
     const squares = [
       {
         type: null,
+        direction: null,
         position: [0, 0],
       },
       {
         type: null,
+        direction: null,
         position: [1, 0],
       },
       {
         type: null,
+        direction: null,
         position: [2, 0],
       },
       {
         type: null,
+        direction: null,
         position: [0, 1],
       },
       {
         type: null,
+        direction: null,
         position: [1, 1],
       },
       {
         type: null,
+        direction: null,
         position: [2, 1],
       },
       {
         type: null,
+        direction: null,
         position: [0, 2],
       },
       {
         type: 'hiyoko',
+        direction: 'upward',
         position: [1, 2],
       },
       {
         type: null,
+        direction: null,
         position: [2, 2],
       },
       {
         type: 'zou',
+        direction: 'upward',
         position: [0, 3],
       },
       {
         type: 'lion',
+        direction: 'upward',
         position: [1, 3],
       },
       {
         type: 'kirin',
+        direction: 'upward',
         position: [2, 3],
       },
     ]
@@ -128,7 +140,9 @@ class Board extends React.Component {
     } else if (this.isSquareIncludedInMovingCandidates(i)) {
         const squares = this.state.squares.slice();
         squares[i].type = this.state.squares[this.state.selectedSquareIndex].type;
+        squares[i].direction = this.state.squares[this.state.selectedSquareIndex].direction;
         squares[this.state.selectedSquareIndex].type = null;
+        squares[this.state.selectedSquareIndex].direction = null;
         this.setState({
           squares: squares,
           selectedSquareIndex: null,
