@@ -125,9 +125,9 @@ class Board extends React.Component {
       
       const diffs = new Koma(this.state.squares[i].type).moveTo;
       const movingCandidates = this.mapMergeDiffs(squares[i].position, diffs);
-      const komaPositionStrings = squares.filter(s => s.type !== null).map(s => s.position.toString());
+      const filledPositions = squares.filter(s => s.type !== null);
       const filteredCandidates = movingCandidates.filter(c => c[0] >= 0 && c[0] < 3 && c[1] >= 0 && c[1] < 4)
-                                           .filter(c => !(komaPositionStrings.includes(c.toString())));
+                                                 .filter(c => !(filledPositions.map(s => s.position.toString()).includes(c.toString())));
 
       this.setState({movingCandidates: filteredCandidates});
     }
