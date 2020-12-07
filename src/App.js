@@ -117,10 +117,15 @@ class Board extends React.Component {
         });
     } else {
       this.setState({selectedSquareIndex: i});
-      const position = this.state.squares[i].position
+      const squares = this.state.squares.slice();
+      const position = squares[i].position;
+      const komaPositionStrings = squares.filter(s => s.type !== null).map(s => s.position.toString());
+
       const diffs = new Koma(this.state.squares[i].type).moveTo;
       const candidates = diffs.map(diff => [diff[0] + position[0], diff[1] + position[1]]);
-      const filteredCandidates = candidates.filter(c => c[0] >= 0 && c[0] < 3 && c[1] >= 0 && c[1] < 4);
+      const filteredCandidates = candidates.filter(c => c[0] >= 0 && c[0] < 3 && c[1] >= 0 && c[1] < 4)
+                                           .filter(c => !(komaPositionStrings.includes(c.toString())));
+
       this.setState({movingCandidates: filteredCandidates});
     }
   }
