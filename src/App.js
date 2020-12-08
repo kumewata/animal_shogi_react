@@ -11,6 +11,9 @@ class Square extends React.Component {
     if (this.props.isCandidate) {
       className += ' candidate';
     }
+    if (this.props.direction == 'downward') {
+      className += ' downward';
+    }
     const koma = new Koma(this.props.type);
     return (
       <button
@@ -28,18 +31,18 @@ class Board extends React.Component {
     super(props);
     const squares = [
       {
-        type: null,
-        direction: null,
+        type: 'kirin',
+        direction: 'downward',
         position: [0, 0],
       },
       {
-        type: null,
-        direction: null,
+        type: 'lion',
+        direction: 'downward',
         position: [1, 0],
       },
       {
-        type: null,
-        direction: null,
+        type: 'zou',
+        direction: 'downward',
         position: [2, 0],
       },
       {
@@ -48,8 +51,8 @@ class Board extends React.Component {
         position: [0, 1],
       },
       {
-        type: null,
-        direction: null,
+        type: 'hiyoko',
+        direction: 'downward',
         position: [1, 1],
       },
       {
@@ -128,6 +131,7 @@ class Board extends React.Component {
         onClick={() => this.handleClick(i)}
         isSelected={this.state.selectedSquareIndex === i}
         isCandidate={this.isSquareIncludedInMovingCandidates(i)}
+        direction={this.state.squares[i].direction}
       />);
   }
 
