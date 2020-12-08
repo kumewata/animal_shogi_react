@@ -56,3 +56,7 @@ ol, ul {
 .candidate {
   background-color: bisque;
 }
+
+.downward {
+  transform: rotate( 180deg );
+}
