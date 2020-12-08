@@ -11,7 +11,7 @@ class Square extends React.Component {
     if (this.props.isCandidate) {
       className += ' candidate';
     }
-    if (this.props.direction == 'downward') {
+    if (!this.props.direction) {
       className += ' downward';
     }
     const koma = new Koma(this.props.type);
@@ -32,17 +32,17 @@ class Board extends React.Component {
     const squares = [
       {
         type: 'kirin',
-        direction: 'downward',
+        direction: false,
         position: [0, 0],
       },
       {
         type: 'lion',
-        direction: 'downward',
+        direction: false,
         position: [1, 0],
       },
       {
         type: 'zou',
-        direction: 'downward',
+        direction: false,
         position: [2, 0],
       },
       {
@@ -52,7 +52,7 @@ class Board extends React.Component {
       },
       {
         type: 'hiyoko',
-        direction: 'downward',
+        direction: false,
         position: [1, 1],
       },
       {
@@ -67,7 +67,7 @@ class Board extends React.Component {
       },
       {
         type: 'hiyoko',
-        direction: 'upward',
+        direction: true,
         position: [1, 2],
       },
       {
@@ -77,17 +77,17 @@ class Board extends React.Component {
       },
       {
         type: 'zou',
-        direction: 'upward',
+        direction: true,
         position: [0, 3],
       },
       {
         type: 'lion',
-        direction: 'upward',
+        direction: true,
         position: [1, 3],
       },
       {
         type: 'kirin',
-        direction: 'upward',
+        direction: true,
         position: [2, 3],
       },
     ]
@@ -95,6 +95,7 @@ class Board extends React.Component {
       squares: squares,
       selectedSquareIndex: null,
       movingCandidates: [],
+      xIsNext: true
     }
   }
 
@@ -151,8 +152,9 @@ class Board extends React.Component {
           squares: squares,
           selectedSquareIndex: null,
           movingCandidates: [],
+          xIsNext: !this.state.xIsNext,
         });
-    } else {
+    } else if (this.state.xIsNext === this.state.squares[i].direction) {
       const squares = this.state.squares.slice();
       
       this.setState({
@@ -163,7 +165,7 @@ class Board extends React.Component {
   }
 
   render() {
-    const status = 'Next player: X';
+    const status = 'Next player: ' + (this.state.xIsNext ? 'Upward' : 'Downward');
 
     return (
       <div>
