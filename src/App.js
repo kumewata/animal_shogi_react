@@ -95,7 +95,8 @@ class Board extends React.Component {
       squares: squares,
       selectedSquareIndex: null,
       movingCandidates: [],
-      xIsNext: true
+      xIsNext: true,
+      winner: null,
     }
   }
 
@@ -144,25 +145,35 @@ class Board extends React.Component {
 
   handleClick(i) {
     if (this.state.selectedSquareIndex === i) {
+      if (this.state.winner !== null) return;
+
       this.setState({
         selectedSquareIndex: null,
         movingCandidates: []
       });
     } else if (this.isSquareIncludedInMovingCandidates(i)) {
-        const squares = this.state.squares.slice();
-        squares[i].type = this.state.squares[this.state.selectedSquareIndex].type;
-        squares[i].direction = this.state.squares[this.state.selectedSquareIndex].direction;
-        squares[this.state.selectedSquareIndex].type = null;
-        squares[this.state.selectedSquareIndex].direction = null;
-        this.setState({
-          squares: squares,
-          selectedSquareIndex: null,
-          movingCandidates: [],
-          xIsNext: !this.state.xIsNext,
-        });
-    } else if (this.state.xIsNext === this.state.squares[i].direction) {
       const squares = this.state.squares.slice();
-      
+      squares[i].type = this.state.squares[this.state.selectedSquareIndex].type;
+      squares[i].direction = this.state.squares[this.state.selectedSquareIndex].direction;
+      squares[this.state.selectedSquareIndex].type = null;
+      squares[this.state.selectedSquareIndex].direction = null;
+      this.setState({
+        squares: squares,
+        selectedSquareIndex: null,
+        movingCandidates: [],
+        xIsNext: !this.state.xIsNext,
+      });
+
+      const winner = calculateWinner(this.state.squares);
+      if (winner !== null) {
+        this.setState({
+          winner: winner,
+        });
+      }
+    } else if (this.state.xIsNext === this.state.squares[i].direction) {
+      if (this.state.winner !== null) return;
+
+      const squares = this.state.squares.slice();
       this.setState({
         selectedSquareIndex: i,
         movingCandidates: this.filterdMovingCandidates(i, squares),
@@ -171,10 +182,9 @@ class Board extends React.Component {
   }
 
   render() {
-    const winner = calculateWinner(this.state.squares);
     let status;
-    if (winner != null) {
-      status = 'Winner: ' + (winner ? 'Upward' : 'Downward');
+    if (this.state.winner !== null) {
+      status = 'Winner: ' + (this.state.winner ? 'Upward' : 'Downward');
     } else {
       status = 'Next player: ' + (this.state.xIsNext ? 'Upward' : 'Downward');
     }
