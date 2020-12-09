@@ -106,14 +106,20 @@ class Board extends React.Component {
     return this.state.movingCandidates.some(isSamePosition);
   }
 
-  mapMergeDiffs(target, diffs) {
-    return diffs.map(diff => [diff[0] + target[0], diff[1] + target[1]]);
+  mapMergeDiffs(square, diffs) {
+    const position = square.position;
+
+    if (square.direction) {
+      return diffs.map(diff => [position[0] + diff[0], position[1] + diff[1]]);
+    } else {
+      return diffs.map(diff => [position[0] + diff[0], position[1] - diff[1]]);
+    }
   }
 
   filterdMovingCandidates(targetIndex, squares) {
     const diffs = new Koma(squares[targetIndex].type).moveTo;
-    const movingCandidates = this.mapMergeDiffs(squares[targetIndex].position, diffs);
-    const filledPositions = squares.filter(s => s.type !== null && s.direction == squares[targetIndex].direction);
+    const movingCandidates = this.mapMergeDiffs(squares[targetIndex], diffs);
+    const filledPositions = squares.filter(s => s.type !== null && s.direction === squares[targetIndex].direction);
     const isInsideBoard = (c) => {
       return c => c[0] >= 0 && c[0] < 3 && c[1] >= 0 && c[1] < 4;
     }
@@ -165,7 +171,13 @@ class Board extends React.Component {
   }
 
   render() {
-    const status = 'Next player: ' + (this.state.xIsNext ? 'Upward' : 'Downward');
+    const winner = calculateWinner(this.state.squares);
+    let status;
+    if (winner != null) {
+      status = 'Winner: ' + (winner ? 'Upward' : 'Downward');
+    } else {
+      status = 'Next player: ' + (this.state.xIsNext ? 'Upward' : 'Downward');
+    }
 
     return (
       <div>
@@ -236,6 +248,24 @@ class Koma {
     this.name = !!type ? animals[type].name : '';
     this.moveTo = !!type ? animals[type].moveTo: [];
   }
+}
+
+function calculateWinner(squares) {
+  
+  const lions = squares.filter(s => s.type === 'lion');
+  const isCatched = lions.length === 1;
+  if (isCatched) {
+    return lions[0].direction;
+  }
+  const isUpwardTried = squares.filter(s => (s.type === 'lion' && s.direction))[0].position[1] === 0;
+  const isDownwardTried = squares.filter(s => (s.type === 'lion' && !s.direction))[0].position[1] === 3;
+  if (isUpwardTried) {
+    return true;
+  } else if (isDownwardTried) {
+    return false
+  }
+
+  return null
 }
 
 export default App;
