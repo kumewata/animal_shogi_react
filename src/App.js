@@ -27,6 +27,46 @@ class Square extends React.Component {
 }
 
 class Board extends React.Component {
+  renderSquare(i) {
+    return (
+      <Square
+        type={this.props.squares[i].type}
+        onClick={() => this.props.onClick(i)}
+        isSelected={this.props.selectedSquareIndex === i}
+        isCandidate={this.props.isSquareIncludedInMovingCandidates(i)}
+        direction={this.props.squares[i].direction}
+      />);
+  }
+
+  render() {
+    return (
+      <div>
+        <div className="board-row">
+          {this.renderSquare(0)}
+          {this.renderSquare(1)}
+          {this.renderSquare(2)}
+        </div>
+        <div className="board-row">
+          {this.renderSquare(3)}
+          {this.renderSquare(4)}
+          {this.renderSquare(5)}
+        </div>
+        <div className="board-row">
+          {this.renderSquare(6)}
+          {this.renderSquare(7)}
+          {this.renderSquare(8)}
+        </div>
+        <div className="board-row">
+          {this.renderSquare(9)}
+          {this.renderSquare(10)}
+          {this.renderSquare(11)}
+        </div>
+      </div>
+    );
+  }
+}
+
+class App extends React.Component {
   constructor(props) {
     super(props);
     const squares = [
@@ -132,17 +172,6 @@ class Board extends React.Component {
                            .filter(isPositionFilled);
   }
 
-  renderSquare(i) {
-    return (
-      <Square
-        type={this.state.squares[i].type}
-        onClick={() => this.handleClick(i)}
-        isSelected={this.state.selectedSquareIndex === i}
-        isCandidate={this.isSquareIncludedInMovingCandidates(i)}
-        direction={this.state.squares[i].direction}
-      />);
-  }
-
   handleClick(i) {
     if (this.state.selectedSquareIndex === i) {
       if (this.state.winner !== null) return;
@@ -190,42 +219,18 @@ class Board extends React.Component {
     }
 
     return (
-      <div>
-        <div className="status">{status}</div>
-        <div className="board-row">
-          {this.renderSquare(0)}
-          {this.renderSquare(1)}
-          {this.renderSquare(2)}
-        </div>
-        <div className="board-row">
-          {this.renderSquare(3)}
-          {this.renderSquare(4)}
-          {this.renderSquare(5)}
-        </div>
-        <div className="board-row">
-          {this.renderSquare(6)}
-          {this.renderSquare(7)}
-          {this.renderSquare(8)}
-        </div>
-        <div className="board-row">
-          {this.renderSquare(9)}
-          {this.renderSquare(10)}
-          {this.renderSquare(11)}
-        </div>
-      </div>
-    );
-  }
-}
-
-class App extends React.Component {
-  render() {
-    return (
       <div className="game">
         <div className="game-board">
-          <Board />
+          <Board
+            squares={this.state.squares}
+            selectedSquareIndex={this.state.selectedSquareIndex}
+            movingCandidates={this.state.movingCandidates}
+            onClick={(i) => this.handleClick(i)}
+            isSquareIncludedInMovingCandidates={(i) => this.isSquareIncludedInMovingCandidates(i)}
+          />
         </div>
         <div className="game-info">
-          <div>{/* status */}</div>
+          <div>{status}</div>
           <ol>{/* TODO */}</ol>
         </div>
       </div>
