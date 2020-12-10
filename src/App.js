@@ -188,6 +188,21 @@ class App extends React.Component {
                            .filter(isPositionFilled);
   }
 
+  stockKoma(square) {
+    let stocks;
+    if (square.direction === true) {
+      stocks = this.state.upwardStocks.slice();
+      this.setState({
+        upwardStocks: stocks.concat([square.type]),
+      });
+    } else if (square.direction === false) {
+      stocks = this.state.downwardStocks.slice();
+      this.setState({
+        downwardStocks: stocks.concat([square.type]),
+      });
+    }
+  }
+
   handleClick(i) {
     if (this.state.selectedSquareIndex === i) {
       if (this.state.winner !== null) return;
@@ -198,18 +213,7 @@ class App extends React.Component {
       });
     } else if (this.isSquareIncludedInMovingCandidates(i)) {
       const squares = this.state.squares.slice();
-      let stocks;
-      if (squares[i].direction === true) {
-        stocks = this.state.upwardStocks.slice();
-        this.setState({
-          upwardStocks: stocks.concat([squares[i].type]),
-        });
-      } else if (squares[i].direction === false) {
-        stocks = this.state.downwardStocks.slice();
-        this.setState({
-          downwardStocks: stocks.concat([squares[i].type]),
-        });
-      }
+      this.stockKoma(squares[i]);
       squares[i].type = this.state.squares[this.state.selectedSquareIndex].type;
       squares[i].direction = this.state.squares[this.state.selectedSquareIndex].direction;
       squares[this.state.selectedSquareIndex].type = null;
