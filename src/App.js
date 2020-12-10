@@ -68,8 +68,8 @@ class Board extends React.Component {
 
 class StockBoard extends React.Component {
   render() {
-    const stocks = this.props.stocks.map(stock =>{
-      return(<li key={stock}>{new Koma(stock).name}</li>);
+    const stocks = this.props.stocks.map((stock, index) =>{
+      return(<li key={index}>{new Koma(stock).name}</li>);
     });
 
     return (
