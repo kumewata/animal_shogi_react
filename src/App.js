@@ -69,7 +69,7 @@ class Board extends React.Component {
 class StockBoard extends React.Component {
   render() {
     const stocks = this.props.stocks.map(stock =>{
-      return(<li key={stock}>{stock}</li>);
+      return(<li key={stock}>{new Koma(stock).name}</li>);
     });
 
     return (
@@ -151,6 +151,8 @@ class App extends React.Component {
       movingCandidates: [],
       xIsNext: true,
       winner: null,
+      upwardStocks: [],
+      downwardStocks: [],
     }
   }
 
@@ -196,6 +198,18 @@ class App extends React.Component {
       });
     } else if (this.isSquareIncludedInMovingCandidates(i)) {
       const squares = this.state.squares.slice();
+      let stocks;
+      if (squares[i].direction === true) {
+        stocks = this.state.upwardStocks.slice();
+        this.setState({
+          upwardStocks: stocks.concat([squares[i].type]),
+        });
+      } else if (squares[i].direction === false) {
+        stocks = this.state.downwardStocks.slice();
+        this.setState({
+          downwardStocks: stocks.concat([squares[i].type]),
+        });
+      }
       squares[i].type = this.state.squares[this.state.selectedSquareIndex].type;
       squares[i].direction = this.state.squares[this.state.selectedSquareIndex].direction;
       squares[this.state.selectedSquareIndex].type = null;
@@ -241,7 +255,7 @@ class App extends React.Component {
           <div className="game-stock-board downward">
             <p>持ち駒</p>
             <StockBoard
-              stocks={['うし', 'うま']}
+              stocks={this.state.upwardStocks}
             />
           </div>
           <div className="game-board">
@@ -256,7 +270,7 @@ class App extends React.Component {
           <div className="game-stock-board upward">
             <p>持ち駒</p>
             <StockBoard
-              stocks={['ひよこ', 'ぞう']}
+              stocks={this.state.downwardStocks}
             />
           </div>
         </div>
