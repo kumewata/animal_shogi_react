@@ -66,6 +66,20 @@ class Board extends React.Component {
   }
 }
 
+class StockBoard extends React.Component {
+  render() {
+    const stocks = this.props.stocks.map(stock =>{
+      return(<li key={stock}>{stock}</li>);
+    });
+
+    return (
+      <ol>
+        {stocks}
+      </ol>
+    )
+  }
+}
+
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -219,19 +233,32 @@ class App extends React.Component {
     }
 
     return (
-      <div className="game">
-        <div className="game-board">
-          <Board
-            squares={this.state.squares}
-            selectedSquareIndex={this.state.selectedSquareIndex}
-            movingCandidates={this.state.movingCandidates}
-            onClick={(i) => this.handleClick(i)}
-            isSquareIncludedInMovingCandidates={(i) => this.isSquareIncludedInMovingCandidates(i)}
-          />
+      <div className="app">
+        <div className="status">
+          {status}
         </div>
-        <div className="game-info">
-          <div>{status}</div>
-          <ol>{/* TODO */}</ol>
+        <div className="game">
+          <div className="game-stock-board downward">
+            <p>持ち駒</p>
+            <StockBoard
+              stocks={['うし', 'うま']}
+            />
+          </div>
+          <div className="game-board">
+            <Board
+              squares={this.state.squares}
+              selectedSquareIndex={this.state.selectedSquareIndex}
+              movingCandidates={this.state.movingCandidates}
+              onClick={(i) => this.handleClick(i)}
+              isSquareIncludedInMovingCandidates={(i) => this.isSquareIncludedInMovingCandidates(i)}
+            />
+          </div>
+          <div className="game-stock-board upward">
+            <p>持ち駒</p>
+            <StockBoard
+              stocks={['ひよこ', 'ぞう']}
+            />
+          </div>
         </div>
       </div>
     );
