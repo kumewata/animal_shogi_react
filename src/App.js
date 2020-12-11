@@ -69,7 +69,14 @@ class Board extends React.Component {
 class StockBoard extends React.Component {
   render() {
     const stocks = this.props.stocks.map((stock, index) =>{
-      return(<li key={index}>{new Koma(stock).name}</li>);
+      return(
+        <li
+          key={index}
+          onClick={() => this.props.onClick(stock)}
+        >
+          {new Koma(stock).name}
+        </li>
+      );
     });
 
     return (
@@ -152,7 +159,9 @@ class App extends React.Component {
       xIsNext: true,
       winner: null,
       upwardStocks: [],
+      upwardSelectedStock: null,
       downwardStocks: [],
+      downwardSelectedStock: null,
     }
   }
 
@@ -183,19 +192,19 @@ class App extends React.Component {
     const isPositionFilled = (c) => {
       return !(filledPositions.map(s => s.position.toString()).includes(c.toString()));
     }
-    
+
     return movingCandidates.filter(isInsideBoard)
                            .filter(isPositionFilled);
   }
 
   stockKoma(square) {
     let stocks;
-    if (square.direction === true) {
+    if (square.direction === false) {
       stocks = this.state.upwardStocks.slice();
       this.setState({
         upwardStocks: stocks.concat([square.type]),
       });
-    } else if (square.direction === false) {
+    } else if (square.direction === true) {
       stocks = this.state.downwardStocks.slice();
       this.setState({
         downwardStocks: stocks.concat([square.type]),
@@ -242,6 +251,20 @@ class App extends React.Component {
     }
   }
 
+  handleClickStock(type, direction) {
+    if (direction !== this.state.xIsNext) return;
+
+    if (direction) {
+      this.setState({
+        upwardSelectedStock: type,
+      })
+    } else {
+      this.setState({
+        downwardSelectedStock: type,
+      })
+    }
+  };
+
   render() {
     let status;
     if (this.state.winner !== null) {
@@ -249,6 +272,28 @@ class App extends React.Component {
     } else {
       status = 'Next player: ' + (this.state.xIsNext ? 'Upward' : 'Downward');
     }
+
+    const upwardStocks = this.state.upwardStocks.map((stock, index) => {
+      return(
+        <li
+          key={index}
+          onClick={() => this.handleClickStock(stock, true)}
+        >
+          {new Koma(stock).name}
+        </li>
+      );
+    });
+
+    const downwardStocks = this.state.downwardStocks.map((stock, index) => {
+      return(
+        <li
+          key={index}
+          onClick={() => this.handleClickStock(stock, false)}
+        >
+          {new Koma(stock).name}
+        </li>
+      );
+    });
 
     return (
       <div className="app">
@@ -258,9 +303,11 @@ class App extends React.Component {
         <div className="game">
           <div className="game-stock-board downward">
             <p>持ち駒</p>
-            <StockBoard
+            <ol>{downwardStocks}</ol>
+            {/* <StockBoard
               stocks={this.state.upwardStocks}
-            />
+              onClick={(type) => this.handleClickStock(type)}
+            /> */}
           </div>
           <div className="game-board">
             <Board
@@ -273,9 +320,10 @@ class App extends React.Component {
           </div>
           <div className="game-stock-board upward">
             <p>持ち駒</p>
-            <StockBoard
+            <ol>{upwardStocks}</ol>
+            {/* <StockBoard
               stocks={this.state.downwardStocks}
-            />
+            /> */}
           </div>
         </div>
       </div>
@@ -311,7 +359,7 @@ class Koma {
 }
 
 function calculateWinner(squares) {
-  
+
   const lions = squares.filter(s => s.type === 'lion');
   const isCatched = lions.length === 1;
   if (isCatched) {
