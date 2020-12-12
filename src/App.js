@@ -159,9 +159,8 @@ class App extends React.Component {
       xIsNext: true,
       winner: null,
       upwardStocks: [],
-      upwardSelectedStockIndex: null,
+      selectedStockIndex: null,
       downwardStocks: [],
-      downwardSelectedStockIndex: null,
     }
   }
 
@@ -233,8 +232,7 @@ class App extends React.Component {
         selectedSquareIndex: null,
         movingCandidates: [],
         xIsNext: !this.state.xIsNext,
-        upwardSelectedStockIndex: null,
-        downwardSelectedStockIndex: null,
+        selectedStockIndex: null,
       });
 
       const winner = calculateWinner(this.state.squares);
@@ -260,17 +258,10 @@ class App extends React.Component {
     const movableIndexes = this.state.squares.flatMap((s, index) => (s.type == null ? index: null))
                                   .filter(i => i !== null);
 
-    if (direction) {
-      this.setState({
-        movingCandidates: movableIndexes,
-        upwardSelectedStockIndex: index,
-      })
-    } else {
-      this.setState({
-        movingCandidates: movableIndexes,
-        downwardSelectedStockIndex: index,
-      })
-    }
+    this.setState({
+      movingCandidates: movableIndexes,
+      selectedStockIndex: index,
+    })
   };
 
   render() {
@@ -312,10 +303,6 @@ class App extends React.Component {
           <div className="game-stock-board downward">
             <p>持ち駒</p>
             <ol>{downwardStocks}</ol>
-            {/* <StockBoard
-              stocks={this.state.upwardStocks}
-              onClick={(type) => this.handleClickStock(type)}
-            /> */}
           </div>
           <div className="game-board">
             <Board
@@ -324,16 +311,12 @@ class App extends React.Component {
               movingCandidates={this.state.movingCandidates}
               onClick={(i) => this.handleClick(i)}
               isSquareIncludedInMovingCandidates={(i) => this.isSquareIncludedInMovingCandidates(i)}
-              upwardSelectedStockIndex={this.state.upwardSelectedStockIndex}
-              downwardSelectedStockIndex={this.state.downwardSelectedStockIndex}
+              selectedStockIndex={this.state.selectedStockIndex}
             />
           </div>
           <div className="game-stock-board upward">
             <p>持ち駒</p>
             <ol>{upwardStocks}</ol>
-            {/* <StockBoard
-              stocks={this.state.downwardStocks}
-            /> */}
           </div>
         </div>
       </div>
