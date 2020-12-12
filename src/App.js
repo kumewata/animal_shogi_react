@@ -257,16 +257,17 @@ class App extends React.Component {
   handleClickStock(index, direction) {
     if (direction !== this.state.xIsNext) return;
 
-    const movingCandidates = this.state.squares.filter(s => s.type == null);
+    const movableIndexes = this.state.squares.flatMap((s, index) => (s.type == null ? index: null))
+                                  .filter(i => i !== null);
 
     if (direction) {
       this.setState({
-        movingCandidates: movingCandidates,
+        movingCandidates: movableIndexes,
         upwardSelectedStockIndex: index,
       })
     } else {
       this.setState({
-        movingCandidates: movingCandidates,
+        movingCandidates: movableIndexes,
         downwardSelectedStockIndex: index,
       })
     }
