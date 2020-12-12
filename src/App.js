@@ -1,8 +1,40 @@
 import React from 'react';
 // import ReactDOM from 'react-dom';
 import './App.css';
-
+import hiyokoImage from './images/hiyoko.png';
+import kirinImage from './images/kirin.png';
+import lionImage from './images/lion.png';
+import zouImage from './images/zou.png';
 class Square extends React.Component {
+  image(type) {
+    let image = null;
+    switch(type) {
+      case 'hiyoko':
+        image = hiyokoImage;
+        break;
+      case 'kirin':
+        image = kirinImage;
+        break;
+      case 'lion':
+        image = lionImage;
+        break;
+      case 'zou':
+        image = zouImage;
+        break;
+      default:
+    }
+
+    if(type == null) return
+
+    const imageStyle = {
+      height: '90px',
+      width: '90px',
+    };
+
+    return(
+      <img src={image} style={imageStyle} alt={type} />
+    )
+  }
   render() {
     let className = 'square';
     if (this.props.isSelected) {
@@ -14,13 +46,13 @@ class Square extends React.Component {
     if (!this.props.direction) {
       className += ' downward';
     }
-    const koma = new Koma(this.props.type);
+
     return (
       <button
         className={className}
         onClick={() => this.props.onClick()}
       >
-        {koma.name}
+        {this.image(this.props.type)}
       </button>
     );
   }
