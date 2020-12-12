@@ -220,7 +220,7 @@ class App extends React.Component {
         selectedSquareIndex: null,
         movingCandidates: []
       });
-    } else if (this.isSquareIncludedInMovingCandidates(i)) {
+    } else if (this.isSquareIncludedInMovingCandidates(i) && this.state.selectedStockIndex === null) {
       const squares = this.state.squares.slice();
       this.stockKoma(squares[i]);
       squares[i].type = this.state.squares[this.state.selectedSquareIndex].type;
@@ -241,12 +241,40 @@ class App extends React.Component {
           winner: winner,
         });
       }
+    } else if (this.isSquareIncludedInMovingCandidates(i) && this.state.selectedStockIndex !== null) {
+      const squares = this.state.squares.slice();
+      let stocks;
+      if (this.state.xIsNext) {
+        stocks = this.state.upwardStocks.slice();
+      } else {
+        stocks = this.state.downwardStocks.slice();
+      }
+      squares[i].type = stocks[this.state.selectedStockIndex];
+      squares[i].direction = this.state.xIsNext;
+      if (this.state.xIsNext) {
+        this.setState({
+          squres: squares,
+          selectedStockIndex: null,
+          movingCandidates: [],
+          xIsNext: !this.state.xIsNext,
+          upwardStocks: stocks.splice(this.selectedStockIndex, 1)
+        })
+      } else {
+        this.setState({
+          squres: squares,
+          selectedStockIndex: null,
+          movingCandidates: [],
+          xIsNext: !this.state.xIsNext,
+          downwardStocks: stocks.splice(this.selectedStockIndex, 1)
+        })
+      }
     } else if (this.state.xIsNext === this.state.squares[i].direction) {
       if (this.state.winner !== null) return;
 
       const squares = this.state.squares.slice();
       this.setState({
         selectedSquareIndex: i,
+        selectedStockIndex: null,
         movingCandidates: this.filterdMovingCandidates(i, squares),
       });
     }
@@ -260,6 +288,7 @@ class App extends React.Component {
 
     this.setState({
       movingCandidates: movableIndexes,
+      selectedSquareIndex: null,
       selectedStockIndex: index,
     })
   };
