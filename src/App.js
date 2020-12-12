@@ -166,10 +166,7 @@ class App extends React.Component {
   }
 
   isSquareIncludedInMovingCandidates(i) {
-    const position = this.state.squares[i].position;
-    const isSamePosition = (element) => element[0] === position[0] && element[1] === position[1];
-
-    return this.state.movingCandidates.some(isSamePosition);
+    return this.state.movingCandidates.includes(i);
   }
 
   mapMergeDiffs(square, diffs) {
@@ -182,19 +179,23 @@ class App extends React.Component {
     }
   }
 
+  convertPositionsToIndexes(positions, squares) {
+    return positions.map((position) => squares.findIndex((s) => s.position[0] === position[0] && s.position[1] === position[1]))
+                    .filter(i => i > 0);
+  }
+
   filterdMovingCandidates(targetIndex, squares) {
     const diffs = new Koma(squares[targetIndex].type).moveTo;
-    const movingCandidates = this.mapMergeDiffs(squares[targetIndex], diffs);
-    const filledPositions = squares.filter(s => s.type !== null && s.direction === squares[targetIndex].direction);
-    const isInsideBoard = (c) => {
-      return c => c[0] >= 0 && c[0] < 3 && c[1] >= 0 && c[1] < 4;
-    }
-    const isPositionFilled = (c) => {
-      return !(filledPositions.map(s => s.position.toString()).includes(c.toString()));
+    const movingCandidatePosisions = this.mapMergeDiffs(squares[targetIndex], diffs);
+    const movingCandidateIndexes = this.convertPositionsToIndexes(movingCandidatePosisions, squares);
+    const movableIndexes = squares.flatMap((s, index) => (s.type !== null && s.direction === squares[targetIndex].direction) ? index: null)
+                                  .filter(i => i !== null);
+
+    const isMovableIndex = (c) => {
+      return !(movableIndexes.map(s => s.toString()).includes(c.toString()));
     }
 
-    return movingCandidates.filter(isInsideBoard)
-                           .filter(isPositionFilled);
+    return movingCandidateIndexes.filter(isMovableIndex);
   }
 
   stockKoma(square) {
