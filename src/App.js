@@ -159,9 +159,9 @@ class App extends React.Component {
       xIsNext: true,
       winner: null,
       upwardStocks: [],
-      upwardSelectedStock: null,
+      upwardSelectedStockIndex: null,
       downwardStocks: [],
-      downwardSelectedStock: null,
+      downwardSelectedStockIndex: null,
     }
   }
 
@@ -232,6 +232,8 @@ class App extends React.Component {
         selectedSquareIndex: null,
         movingCandidates: [],
         xIsNext: !this.state.xIsNext,
+        upwardSelectedStockIndex: null,
+        downwardSelectedStockIndex: null,
       });
 
       const winner = calculateWinner(this.state.squares);
@@ -251,16 +253,16 @@ class App extends React.Component {
     }
   }
 
-  handleClickStock(type, direction) {
+  handleClickStock(index, direction) {
     if (direction !== this.state.xIsNext) return;
 
     if (direction) {
       this.setState({
-        upwardSelectedStock: type,
+        upwardSelectedStockIndex: index,
       })
     } else {
       this.setState({
-        downwardSelectedStock: type,
+        downwardSelectedStockIndex: index,
       })
     }
   };
@@ -277,7 +279,7 @@ class App extends React.Component {
       return(
         <li
           key={index}
-          onClick={() => this.handleClickStock(stock, true)}
+          onClick={() => this.handleClickStock(index, true)}
         >
           {new Koma(stock).name}
         </li>
@@ -288,7 +290,7 @@ class App extends React.Component {
       return(
         <li
           key={index}
-          onClick={() => this.handleClickStock(stock, false)}
+          onClick={() => this.handleClickStock(index, false)}
         >
           {new Koma(stock).name}
         </li>
