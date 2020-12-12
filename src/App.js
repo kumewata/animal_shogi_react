@@ -98,27 +98,6 @@ class Board extends React.Component {
   }
 }
 
-class StockBoard extends React.Component {
-  render() {
-    const stocks = this.props.stocks.map((stock, index) =>{
-      return(
-        <li
-          key={index}
-          onClick={() => this.props.onClick(stock)}
-        >
-          {new Koma(stock).name}
-        </li>
-      );
-    });
-
-    return (
-      <ol>
-        {stocks}
-      </ol>
-    )
-  }
-}
-
 class App extends React.Component {
   constructor(props) {
     super(props);
