@@ -256,12 +256,16 @@ class App extends React.Component {
   handleClickStock(index, direction) {
     if (direction !== this.state.xIsNext) return;
 
+    const movingCandidates = this.state.squares.filter(s => s.type == null);
+
     if (direction) {
       this.setState({
+        movingCandidates: movingCandidates,
         upwardSelectedStockIndex: index,
       })
     } else {
       this.setState({
+        movingCandidates: movingCandidates,
         downwardSelectedStockIndex: index,
       })
     }
@@ -318,6 +322,8 @@ class App extends React.Component {
               movingCandidates={this.state.movingCandidates}
               onClick={(i) => this.handleClick(i)}
               isSquareIncludedInMovingCandidates={(i) => this.isSquareIncludedInMovingCandidates(i)}
+              upwardSelectedStockIndex={this.state.upwardSelectedStockIndex}
+              downwardSelectedStockIndex={this.state.downwardSelectedStockIndex}
             />
           </div>
           <div className="game-stock-board upward">
