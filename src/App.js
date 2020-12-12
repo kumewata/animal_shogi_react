@@ -6,35 +6,7 @@ import kirinImage from './images/kirin.png';
 import lionImage from './images/lion.png';
 import zouImage from './images/zou.png';
 class Square extends React.Component {
-  image(type) {
-    let image = null;
-    switch(type) {
-      case 'hiyoko':
-        image = hiyokoImage;
-        break;
-      case 'kirin':
-        image = kirinImage;
-        break;
-      case 'lion':
-        image = lionImage;
-        break;
-      case 'zou':
-        image = zouImage;
-        break;
-      default:
-    }
 
-    if(type == null) return
-
-    const imageStyle = {
-      height: '90px',
-      width: '90px',
-    };
-
-    return(
-      <img src={image} style={imageStyle} alt={type} />
-    )
-  }
   render() {
     let className = 'square';
     if (this.props.isSelected) {
@@ -47,12 +19,17 @@ class Square extends React.Component {
       className += ' downward';
     }
 
+    const imageStyle = {
+      height: '90px',
+      width: '90px',
+    };
+
     return (
       <button
         className={className}
         onClick={() => this.props.onClick()}
       >
-        {this.image(this.props.type)}
+        {renderImage(this.props.type, imageStyle)}
       </button>
     );
   }
@@ -313,23 +290,33 @@ class App extends React.Component {
     }
 
     const upwardStocks = this.state.upwardStocks.map((stock, index) => {
+      const imageStyle = {
+        width: '50px',
+        height: '50px',
+      }
+
       return(
         <li
           key={index}
           onClick={() => this.handleClickStock(index, true)}
         >
-          {new Koma(stock).name}
+          {renderImage(stock, imageStyle)}
         </li>
       );
     });
 
     const downwardStocks = this.state.downwardStocks.map((stock, index) => {
+      const imageStyle = {
+        width: '50px',
+        height: '50px',
+      }
+
       return(
         <li
           key={index}
           onClick={() => this.handleClickStock(index, false)}
         >
-          {new Koma(stock).name}
+          {renderImage(stock, imageStyle)}
         </li>
       );
     });
@@ -389,6 +376,31 @@ class Koma {
     this.name = !!type ? animals[type].name : '';
     this.moveTo = !!type ? animals[type].moveTo: [];
   }
+}
+
+function renderImage(type, imageStyle) {
+  let image = null;
+  switch(type) {
+    case 'hiyoko':
+      image = hiyokoImage;
+      break;
+    case 'kirin':
+      image = kirinImage;
+      break;
+    case 'lion':
+      image = lionImage;
+      break;
+    case 'zou':
+      image = zouImage;
+      break;
+    default:
+  }
+
+  if(type == null) return
+
+  return(
+    <img src={image} style={imageStyle} alt={type} />
+  )
 }
 
 function calculateWinner(squares) {
