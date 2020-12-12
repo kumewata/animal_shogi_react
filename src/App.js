@@ -307,9 +307,9 @@ class App extends React.Component {
   render() {
     let status;
     if (this.state.winner !== null) {
-      status = 'Winner: ' + (this.state.winner ? 'Upward' : 'Downward');
+      status = '勝者: ' + (this.state.winner ? '先手' : '後手');
     } else {
-      status = 'Next player: ' + (this.state.xIsNext ? 'Upward' : 'Downward');
+      status = '次の指し手: ' + (this.state.xIsNext ? '先手' : '後手');
     }
 
     const upwardStocks = this.state.upwardStocks.map((stock, index) => {
